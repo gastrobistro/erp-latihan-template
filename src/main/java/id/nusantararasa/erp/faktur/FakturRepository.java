@@ -1,6 +1,7 @@
 package id.nusantararasa.erp.faktur;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,9 @@ public interface FakturRepository extends JpaRepository<Faktur, Long> {
     boolean existsBySalesOrderId(Long salesOrderId);
 
     List<Faktur> findAllByOrderByIdDesc();
+
+    List<Faktur> findByStatusAndJatuhTempoLessThanEqualOrderByJatuhTempoAscNomorAsc(StatusFaktur status,
+            LocalDate sampai);
 
     @Query("select coalesce(sum(f.total), 0) from Faktur f where f.customer.id = :customerId and f.status = :status")
     BigDecimal totalPiutang(@Param("customerId") Long customerId, @Param("status") StatusFaktur status);

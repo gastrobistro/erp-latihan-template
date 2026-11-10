@@ -78,4 +78,14 @@ public class FakturService {
                 .map(f -> FakturDto.dari(f, List.of()))
                 .toList();
     }
+
+    /** Faktur belum lunas yang jatuh tempo sampai tanggal {@code sampai} (termasuk), urut jatuh tempo lalu nomor. */
+    @Transactional(readOnly = true)
+    public List<FakturJatuhTempoDto> jatuhTempo(LocalDate sampai) {
+        return fakturRepository
+                .findByStatusAndJatuhTempoLessThanEqualOrderByJatuhTempoAscNomorAsc(StatusFaktur.BELUM_LUNAS, sampai)
+                .stream()
+                .map(f -> FakturJatuhTempoDto.dari(f, sampai))
+                .toList();
+    }
 }
